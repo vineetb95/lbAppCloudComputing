@@ -1,0 +1,23 @@
+{
+  "ids": {
+    "Person": 3,
+    "Transaction": 2,
+    "Item": 2,
+    "Service": 2
+  },
+  "models": {
+    "Person": {
+      "1": "{\"name\":\"Vineet Bakshi\",\"date_created\":\"2021-04-05T08:08:24.549Z\",\"email_id\":\"vineet.bakshi95@gmail.com\",\"balance\":10,\"person_id\":1}",
+      "2": "{\"name\":\"Vineet Bakshi\",\"date_created\":\"2021-04-05T08:08:24.549Z\",\"email_id\":\"vineet.bakshi95@gmail.com\",\"balance\":10,\"person_id\":2}"
+    },
+    "Transaction": {
+      "1": "{\"date_time\":\"2021-04-05T08:16:00.802Z\",\"amount\":0,\"quantity\":0,\"root_id\":0,\"person_id\":0,\"item_id\":0,\"service_id\":0,\"transaction_id\":1}"
+    },
+    "Item": {
+      "1": "{\"name\":\"string\",\"stock\":0,\"price\":0,\"item_id\":1}"
+    },
+    "Service": {
+      "1": "{\"name\":\"string\",\"price\":0,\"person_id\":0,\"service_id\":1}"
+    }
+  }
+}
