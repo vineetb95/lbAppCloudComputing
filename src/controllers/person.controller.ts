@@ -4,18 +4,22 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Person} from '../models';
 import {PersonRepository} from '../repositories';
@@ -23,28 +27,42 @@ import {PersonRepository} from '../repositories';
 export class PersonController {
   constructor(
     @repository(PersonRepository)
-    public personRepository : PersonRepository,
-  ) {}
+    public personRepository: PersonRepository,
+  ) { }
 
   @post('/person')
-  @response(200, {
-    description: 'Person model instance',
-    content: {'application/json': {schema: getModelSchemaRef(Person)}},
-  })
   async create(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Person, {
+          schema: {
             title: 'NewPerson',
-            
-          }),
+            type: 'object',
+            properties: {
+              person_id: {type: 'number'},
+              name: {type: 'string'},
+              date_created: {type: 'string', format: 'date-time'},
+              email_id: {type: 'string'},
+              balance: {type: 'number'},
+              phone_numbers: {type: 'array', items: {type: "number"}},
+            },
+          },
         },
       },
     })
-    person: Person,
-  ): Promise<Person> {
-    return this.personRepository.create(person);
+    person: Person
+  ): Promise<void> {
+    const phoneNumbers = person.phone_numbers!;
+    delete person.phone_numbers;
+    delete person.phoneNumbers;
+    let p = await this.personRepository.create(person);
+    let nums;
+    if (phoneNumbers == undefined)
+      return
+    nums = phoneNumbers.length;
+    for (let i = 0; i < nums; i++) {
+      await this.personRepository.phoneNumbers(p.person_id).create({phoneNumber: phoneNumbers[i]});
+    }
   }
 
   @get('/person/count')

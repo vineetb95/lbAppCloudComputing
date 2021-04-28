@@ -1,6 +1,7 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, hasMany, model, property} from '@loopback/repository';
+import {PhoneNumber} from './phone-number.model';
 
-@model()
+@model({settings: {strict: false}})
 export class Person extends Entity {
   @property({
     type: 'number',
@@ -33,6 +34,10 @@ export class Person extends Entity {
   })
   balance: number;
 
+  @hasMany(() => PhoneNumber, {keyTo: 'person_id'})
+  phoneNumbers?: PhoneNumber[];
+
+  phone_numbers?: number[];
 
   constructor(data?: Partial<Person>) {
     super(data);
