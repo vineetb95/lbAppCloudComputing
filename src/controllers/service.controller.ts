@@ -4,27 +4,33 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Service} from '../models';
-import {ServiceRepository} from '../repositories';
+import {PersonRepository, ServiceRepository} from '../repositories';
 
 export class ServiceController {
   constructor(
     @repository(ServiceRepository)
-    public serviceRepository : ServiceRepository,
-  ) {}
+    public serviceRepository: ServiceRepository,
+    @repository(PersonRepository)
+    public personRepository: PersonRepository,
+  ) { }
 
   @post('/services')
   @response(200, {
@@ -37,7 +43,7 @@ export class ServiceController {
         'application/json': {
           schema: getModelSchemaRef(Service, {
             title: 'NewService',
-            
+
           }),
         },
       },
@@ -59,21 +65,15 @@ export class ServiceController {
   }
 
   @get('/services')
-  @response(200, {
-    description: 'Array of Service model instances',
-    content: {
-      'application/json': {
-        schema: {
-          type: 'array',
-          items: getModelSchemaRef(Service, {includeRelations: true}),
-        },
-      },
-    },
-  })
   async find(
     @param.filter(Service) filter?: Filter<Service>,
   ): Promise<Service[]> {
-    return this.serviceRepository.find(filter);
+    let services = await this.serviceRepository.find(filter);
+    for (let i = 0; i < services.length; i++) {
+      let {name} = await this.personRepository.findById(services[i].person_id);
+      services[i].person_name = name;
+    }
+    return services;
   }
 
   @patch('/services')

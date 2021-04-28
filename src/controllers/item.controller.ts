@@ -4,18 +4,22 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Item} from '../models';
 import {ItemRepository} from '../repositories';
@@ -23,8 +27,8 @@ import {ItemRepository} from '../repositories';
 export class ItemController {
   constructor(
     @repository(ItemRepository)
-    public itemRepository : ItemRepository,
-  ) {}
+    public itemRepository: ItemRepository,
+  ) { }
 
   @post('/items')
   @response(200, {
@@ -37,7 +41,7 @@ export class ItemController {
         'application/json': {
           schema: getModelSchemaRef(Item, {
             title: 'NewItem',
-            
+
           }),
         },
       },

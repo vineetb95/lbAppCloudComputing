@@ -33,6 +33,5 @@
     "node_modules{,/**}",
     ".vscode{,/**}"
   ],
-  "appService.defaultWebAppToDeploy": "/subscriptions/19849075-f48b-4237-a83e-6ac0d29fd1e2/resourceGroups/transactionRecords/providers/Microsoft.Web/sites/transactionsRecords",
   "appService.deploySubpath": "."
 }

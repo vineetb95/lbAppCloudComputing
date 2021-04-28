@@ -126,6 +126,7 @@ export class PersonController {
     @param.path.number('id') id: number,
     @param.filter(Person, {exclude: 'where'}) filter?: FilterExcludingWhere<Person>
   ): Promise<Person> {
+    console.log(filter);
     return this.personRepository.findById(id, filter);
   }
 

@@ -80,7 +80,7 @@ export class FavouriteController {
     const favourites = await this.favouriteRepository.find({});
     const persons: Person[] = [];
     for (let i = 0; i < favourites.length; i++) {
-      let person = await this.personRepository.findById(favourites[i].person_id);
+      let person = await this.personRepository.findById(favourites[i].person_id, {include: ['phoneNumbers']});
       persons.push(person);
     }
     return persons;
@@ -150,11 +150,14 @@ export class FavouriteController {
     await this.favouriteRepository.replaceById(id, favourite);
   }
 
-  @del('/favourites/{id}')
+  @del('/favourites/{person_id}')
   @response(204, {
     description: 'Favourite DELETE success',
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
-    await this.favouriteRepository.deleteById(id);
+  async deleteById(@param.path.number('person_id') person_id: number): Promise<void> {
+    let favs = await this.favouriteRepository.find({where: {person_id}});
+    for (let i = 0; i < favs.length; i++) {
+      await this.favouriteRepository.deleteById(favs[i].id);
+    }
   }
 }

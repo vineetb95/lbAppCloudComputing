@@ -4,7 +4,7 @@
     "Transaction": 2,
     "Item": 2,
     "Service": 2,
-    "Favourite": 2,
+    "Favourite": 5,
     "PhoneNumber": 10
   },
   "models": {
@@ -34,10 +34,12 @@
       "1": "{\"name\":\"string\",\"stock\":0,\"price\":0,\"item_id\":1}"
     },
     "Service": {
-      "1": "{\"name\":\"string\",\"price\":0,\"person_id\":0,\"service_id\":1}"
+      "1": "{\"name\":\"string\",\"price\":0,\"person_id\":1,\"service_id\":1}"
     },
     "Favourite": {
-      "1": "{\"person_id\":1,\"id\":1}"
+      "2": "{\"person_id\":16,\"id\":2}",
+      "3": "{\"person_id\":15,\"id\":3}",
+      "4": "{\"person_id\":1,\"id\":4}"
     },
     "PhoneNumber": {
       "1": "{\"phoneNumber\":87346574352,\"person_id\":1,\"id\":1}",
