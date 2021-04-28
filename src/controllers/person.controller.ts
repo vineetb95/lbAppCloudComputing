@@ -41,7 +41,6 @@ export class PersonController {
             properties: {
               person_id: {type: 'number'},
               name: {type: 'string'},
-              date_created: {type: 'string', format: 'date-time'},
               email_id: {type: 'string'},
               balance: {type: 'number'},
               phone_numbers: {type: 'array', items: {type: "number"}},
@@ -53,6 +52,7 @@ export class PersonController {
     person: Person
   ): Promise<void> {
     const phoneNumbers = person.phone_numbers!;
+    person.date_created = Date();
     delete person.phone_numbers;
     delete person.phoneNumbers;
     let p = await this.personRepository.create(person);

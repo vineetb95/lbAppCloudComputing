@@ -1,9 +1,11 @@
+import {RestBindings} from '@loopback/rest';
 import {ApplicationConfig, TransactionsApplication} from './application';
 
 export * from './application';
 
 export async function main(options: ApplicationConfig = {}) {
   const app = new TransactionsApplication(options);
+  await app.bind(RestBindings.ERROR_WRITER_OPTIONS).to({debug: true});
   await app.boot();
   await app.start();
 

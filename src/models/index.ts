@@ -5,3 +5,4 @@ export * from './service.model';
 export * from './favourite.model';
 export * from './phone-number.model';
 export * from './test.model';
+export * from './multi-transaction-status.model';

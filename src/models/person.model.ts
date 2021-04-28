@@ -18,9 +18,9 @@ export class Person extends Entity {
 
   @property({
     type: 'date',
-    required: true,
+    required: false,
   })
-  date_created: string;
+  date_created?: string;
 
   @property({
     type: 'string',

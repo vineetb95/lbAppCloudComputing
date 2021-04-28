@@ -4,27 +4,39 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Transaction} from '../models';
-import {TransactionRepository} from '../repositories';
+import {ItemRepository, MultiTransactionStatusRepository, PersonRepository, ServiceRepository, TransactionRepository} from '../repositories';
 
 export class TransactionController {
   constructor(
+    @repository(MultiTransactionStatusRepository)
+    public multiTransactionStatusRepository: MultiTransactionStatusRepository,
     @repository(TransactionRepository)
-    public transactionRepository : TransactionRepository,
-  ) {}
+    public transactionRepository: TransactionRepository,
+    @repository(PersonRepository)
+    public personRepository: PersonRepository,
+    @repository(ItemRepository)
+    public itemRepository: ItemRepository,
+    @repository(ServiceRepository)
+    public serviceRepository: ServiceRepository,
+  ) { }
 
   @post('/transactions')
   @response(200, {
@@ -37,7 +49,7 @@ export class TransactionController {
         'application/json': {
           schema: getModelSchemaRef(Transaction, {
             title: 'NewTransaction',
-            
+
           }),
         },
       },
@@ -73,7 +85,36 @@ export class TransactionController {
   async find(
     @param.filter(Transaction) filter?: Filter<Transaction>,
   ): Promise<Transaction[]> {
-    return this.transactionRepository.find(filter);
+    let transactions = await this.multiTransactionStatusRepository.find();
+    let finalTransactions: Transaction[] = [];
+    for (let i = 0; i < transactions.length; i++) {
+      console.log(filter);
+      const sampleTrans = await this.multiTransactionStatusRepository.transactions(transactions[i].root_id).find(filter);
+      console.log(sampleTrans);
+      if (sampleTrans.length == 0)
+        continue;
+
+      let trans = sampleTrans[0];
+      console.log(trans);
+      const {name: person_name} = await this.personRepository.findById(trans.person_id);
+      trans.person_name = person_name;
+      if (trans.item_id) {
+        const {name: item_name} = await this.itemRepository.findById(trans.item_id);
+        trans.item_name = item_name;
+      }
+      if (trans.service_id) {
+        const {name: service_name} = await this.serviceRepository.findById(trans.service_id);
+        trans.service_name = service_name;
+      }
+      let amount: number = 0;
+      for (let i = 0; i < sampleTrans.length; i++) {
+        amount += sampleTrans[i].amount;
+      }
+      trans.amount = amount;
+      trans.status = transactions[i].remaining_amount == 0 ? "Completed" : "Incomplete";
+      finalTransactions.push(trans);
+    }
+    return finalTransactions;
   }
 
   @patch('/transactions')

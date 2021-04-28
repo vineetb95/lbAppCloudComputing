@@ -4,3 +4,4 @@ export * from './item.repository';
 export * from './service.repository';
 export * from './favourite.repository';
 export * from './phone-number.repository';
+export * from './multi-transaction-status.repository';
