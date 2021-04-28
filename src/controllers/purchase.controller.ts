@@ -81,7 +81,7 @@ export class PurchaseController {
         money_due -= remaining_money;
         remaining_money = 0;
       }
-      total_remaining_amount += remaining_money;
+      total_remaining_amount += money_due;
       const {root_id} = await this.multiTransactionStatusRepository.create({remaining_amount: money_due});
       const transaction = await this.multiTransactionStatusRepository.transactions(root_id).create({
         amount: (service.price * quantity - money_due),
@@ -157,7 +157,7 @@ export class PurchaseController {
         money_due -= remaining_money;
         remaining_money = 0;
       }
-      total_remaining_amount += remaining_money;
+      total_remaining_amount += money_due;
       const {root_id} = await this.multiTransactionStatusRepository.create({remaining_amount: money_due});
       const transaction = await this.multiTransactionStatusRepository.transactions(root_id).create({
         amount: (item.price * quantity - money_due),
@@ -169,7 +169,7 @@ export class PurchaseController {
       transactions.push(transaction);
       await this.itemRepository.updateById(item.item_id, {stock: item.stock - quantity});
     }
-    let p = await this.personRepository.findById(person_id)
+    let p = await this.personRepository.findById(person_id);
     await this.personRepository.updateById(person_id, {balance: p.balance + total_remaining_amount});
     return (transactions);
   }
